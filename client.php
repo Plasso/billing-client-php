@@ -2,11 +2,12 @@
 Class PlassoBilling {
   var $plassoUserId; var $plassoToken;
   function __construct($plassoToken) {
+    session_set_cookie_params(3600, '/', $_SERVER['HTTP_HOST'], true, true);
+    session_start();
     $this->plassoToken = $plassoToken;
     if(isset($plassoToken) && $plassoToken == 'logout') { $this->logout();
     } else if($this->hasSession()) {
-      $cookie = json_decode($_COOKIE['pl__'.$this->plassoToken], true);
-      $this->plassoUserId = $cookie['plassoUserId'];
+      $this->plassoUserId = $_SESSION['__pl__billing']['plassoUserId'];
       return true;
     } else if(!$this->ping()){ $this->errorPage(); }
   }
@@ -14,18 +15,17 @@ Class PlassoBilling {
     $results = file_get_contents('https://plasso.com/api/billing_ping/'.$this->plassoToken);
     if(!$results){ return false; } else {
       $json = json_decode($results, true);
-      if(isset($json['logout']) && $json['logout']){  $this->logout(); return true; }
+      if(isset($json['logout']) && $json['logout']){  $this->logout(); }
       $this->plassoUserId = $json['plasso_user_id'];
-      $cookieData = json_encode(array('plassoUserId' => $this->plassoUserId));
-      setcookie('pl__'.$this->plassoToken, $cookieData, time()+3600, '/', $_SERVER['HTTP_HOST'], true, true);
+      $_SESSION['__pl__billing'] = array('plassoUserId' => $this->plassoUserId);
       return true;
     }
   }
   function hasSession() {
-    return (isset($_COOKIE['pl__'.$this->plassoToken]) && $_COOKIE['pl__'.$this->plassoToken] != '');
+    return (isset($_SESSION['__pl__billing']) && isset($_SESSION['__pl__billing']['plassoUserId']));
   }
   function logout() {
-    setcookie('pl__'.$this->plassoToken, '', time()-3600, '/', $_SERVER['HTTP_HOST'], true, true);
+    unset($_SESSION['__pl__billing']);
     echo '<html><head><meta http-equiv="refresh" content="0;url="'.((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')?'https':'http').'://'.$_SERVER['HTTP_HOST'].'" /></head><body></body></html>';
     exit;
   }
@@ -34,4 +34,5 @@ Class PlassoBilling {
   }
 }
 $plassoBilling = new PlassoBilling((isset($_GET['__logout']))?'logout':$_GET['__plasso_token']);
+// Access the Plasso User ID with: $plassoBilling->plassoUserId
 ?>
