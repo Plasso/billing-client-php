@@ -3,9 +3,8 @@ Class PlassoBilling {
   var $plassoUserId; var $plassoToken;
   function __construct($plassoToken) {
     $this->plassoToken = $plassoToken;
-    if(!$plassoToken || is_null($plassoToken) || $plassoToken == ''){ $this->errorPage(); }
-    if($plassoToken == 'logout') { $this->logout(); return true; }
-    if($this->hasSession()) {
+    if(isset($plassoToken) && $plassoToken == 'logout') { $this->logout();
+    } else if($this->hasSession()) {
       $cookie = json_decode($_COOKIE['pl__'.$this->plassoToken], true);
       $this->plassoUserId = $cookie['plassoUserId'];
       return true;
@@ -26,7 +25,9 @@ Class PlassoBilling {
     return (isset($_COOKIE['pl__'.$this->plassoToken]) && $_COOKIE['pl__'.$this->plassoToken] != '');
   }
   function logout() {
-    setcookie('pl__'.$this->plassoToken, '', time()-3600, '/', $_SERVER['HTTP_HOST'], true, true); return true;
+    setcookie('pl__'.$this->plassoToken, '', time()-3600, '/', $_SERVER['HTTP_HOST'], true, true);
+    echo '<html><head><meta http-equiv="refresh" content="0;url="'.((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')?'https':'http').'://'.$_SERVER['HTTP_HOST'].'" /></head><body></body></html>';
+    exit;
   }
   function errorPage() {
     header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found', true, 404); exit;
