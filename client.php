@@ -26,7 +26,7 @@ Class PlassoBilling {
   }
   function logout() {
     unset($_SESSION['__pl__billing']);
-    echo '<html><head><meta http-equiv="refresh" content="0;url="'.((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')?'https':'http').'://'.$_SERVER['HTTP_HOST'].'" /></head><body></body></html>';
+    echo '<html><head><meta http-equiv="refresh" content="0; URL='.((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')?'https':'http').'://'.$_SERVER['HTTP_HOST'].'" /></head><body></body></html>';
     exit;
   }
   function errorPage() {
