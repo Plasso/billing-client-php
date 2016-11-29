@@ -2,8 +2,6 @@
 Class PlassoBilling {
   var $plassoUserId; var $plassoToken;
   function __construct($plassoToken) {
-    session_set_cookie_params(3600, '/', $_SERVER['HTTP_HOST'], true, true);
-    session_start();
     $this->plassoToken = $plassoToken;
     if(isset($plassoToken) && $plassoToken == 'logout') { $this->logout(); } else if(!$this->ping()){ $this->errorPage(); }
   }
@@ -16,6 +14,7 @@ Class PlassoBilling {
       $json = json_decode($results, true);
       if(isset($json['errors']) && count($json['errors']) > 0){  $this->logout(); }
       $this->plassoUserId = $json['data']['member']['id'];
+      setcookie('__pl__billing', $this->plassoToken, time() - 3600, '/', $_SERVER['HTTP_HOST'], true, true);
 
       return true;
     }
