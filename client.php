@@ -6,7 +6,7 @@ Class PlassoBilling {
     if(isset($plassoToken) && $plassoToken == 'logout') { $this->logout(); } else if(!$this->ping()){ $this->errorPage(); }
   }
   function ping() {
-    if (isset($_COOKIE['__pl_billing']) && $_COOKIE['__pl_billing'] != '') {
+    if (!isset($this->plassoToken) && isset($_COOKIE['__pl_billing']) && $_COOKIE['__pl_billing'] != '') {
       $this->plassoToken = $_COOKIE['__plasso_billing'];
     }
     $results = file_get_contents('https://api.plasso.com/?query=%7Bmember(token%3A%22'.$this->plassoToken.'%22)%7Bid%7D%7D');
