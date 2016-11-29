@@ -12,11 +12,11 @@ Class PlassoBilling {
     } else if(!$this->ping()){ $this->errorPage(); }
   }
   function ping() {
-    $results = file_get_contents('https://api.plasso.com/?query=%7Bmembers(token%3A%22'.$this->plassoToken.'%22)%7Bid%7D%7D');
+    $results = file_get_contents('https://api.plasso.com/?query=%7Bmember(token%3A%22'.$this->plassoToken.'%22)%7Bid%7D%7D');
     if(!$results){ return false; } else {
       $json = json_decode($results, true);
       if(isset($json['errors']) && count($json['errors']) > 0){  $this->logout(); }
-      $this->plassoUserId = $json['data']['members']['id'];
+      $this->plassoUserId = $json['data']['member']['id'];
       $_SESSION['__pl__billing'] = array('plassoUserId' => $this->plassoUserId);
       return true;
     }
