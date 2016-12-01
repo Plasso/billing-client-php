@@ -48,4 +48,9 @@ Class PlassoBilling {
   }
 }
 
+// To initalize, uncomment the next line:
+// $plassoBilling = new PlassoBilling((isset($_GET['__logout']))?'logout':(isset($_GET['__plasso_token'])?$_GET['__plasso_token']:NULL));
+
+// Access the Plasso User ID with: $plassoBilling->plassoUserId
+
 ?>
