@@ -1,4 +1,4 @@
-<?
+<?php
 
 Class PlassoBilling {
   var $plassoUserId; var $plassoToken;
