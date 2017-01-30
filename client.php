@@ -1,7 +1,7 @@
 <?php
 
 Class PlassoBilling {
-  var $plassoUserId; var $plassoToken;
+  var $plassoUserId; var $plassoToken; var $plassoPlanId;
   function __construct($plassoToken, $runProtect = true) {
     $this->plassoToken = $plassoToken;
     if($plassoToken == 'logout'){ $this->authFail(); $this->logout(); return; }
@@ -19,6 +19,7 @@ Class PlassoBilling {
       $json = json_decode($results, true);
       if(isset($json['errors']) && count($json['errors']) > 0){ $this->authFail(); return; }
       $this->plassoUserId = $json['data']['member']['id'];
+      $this->plassoPlanId = $json['data']['member']['planId'];
       $cookieValue = json_encode(array('token' => $this->plassoToken, 'logout_url' => $json['data']['member']['space']['logout_url']));
       setcookie('__plasso_billing', $cookieValue, time() + 3600, '/', $_SERVER['SERVER_NAME'], false, true);
       $_COOKIE['__plasso_billing'] = $cookieValue;
@@ -52,5 +53,6 @@ Class PlassoBilling {
 // $plassoBilling = new PlassoBilling((isset($_GET['__logout']))?'logout':(isset($_GET['__plasso_token'])?$_GET['__plasso_token']:NULL));
 
 // Access the Plasso User ID with: $plassoBilling->plassoUserId
+// Access the Plasso User Plan ID with: $plassoBilling->plassoPlanId
 
 ?>
