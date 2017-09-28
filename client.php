@@ -14,7 +14,7 @@ Class PlassoBilling {
       if(isset($cookieJson['token']) && !empty($cookieJson['token'])){ $this->plassoToken = $cookieJson['token']; }
     }
     if(empty($this->plassoToken)) { $this->authFail(); return; }
-    $results = file_get_contents('https://api.plasso.com/?query=%7Bmember(token%3A%22'.$this->plassoToken.'%22)%7Bid%2Cspace%7BlogoutUrl%7D%7D%7D');
+    $results = file_get_contents('https://api.plasso.com/?query=%7Bmember(token%3A%22'.$this->plassoToken.'%22)%7Bid%2CstripeCustomerId%2Cspace%7BlogoutUrl%7D%7D%7D');
     if(!$results){ $this->authError(); return; } else {
       $json = json_decode($results, true);
       if(isset($json['errors']) && count($json['errors']) > 0){ $this->authFail(); return; }
