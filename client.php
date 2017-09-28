@@ -1,7 +1,7 @@
 <?php
 
 Class PlassoBilling {
-  var $plassoUserId; var $plassoToken; var $plassoPlanId;
+  var $plassoUserId; var $plassoToken; var $plassoPlanId; var $stripeCustomerId;
   function __construct($plassoToken, $runProtect = true) {
     $this->plassoToken = $plassoToken;
     if($plassoToken == 'logout'){ $this->authFail(); $this->logout(); return; }
@@ -20,6 +20,7 @@ Class PlassoBilling {
       if(isset($json['errors']) && count($json['errors']) > 0){ $this->authFail(); return; }
       $this->plassoUserId = $json['data']['member']['id'];
       $this->plassoPlanId = $json['data']['member']['planId'];
+      $this->stripeCustomerId = $json['data']['member']['stripeCustomerId'];
       $cookieValue = json_encode(array('token' => $this->plassoToken, 'logout_url' => $json['data']['member']['space']['logout_url']));
       setcookie('__plasso_billing', $cookieValue, time() + 3600, '/', $_SERVER['SERVER_NAME'], false, true);
       $_COOKIE['__plasso_billing'] = $cookieValue;
@@ -54,5 +55,6 @@ Class PlassoBilling {
 
 // Access the Plasso User ID with: $plassoBilling->plassoUserId
 // Access the Plasso User Plan ID with: $plassoBilling->plassoPlanId
+// Access the Plasso User Stripe Customer ID with: $plassoBilling->stripeCustomerId
 
 ?>
