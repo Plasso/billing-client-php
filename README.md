@@ -6,6 +6,7 @@ PHP client for [Plasso Billing](https://plasso.com/billing)
 2. Uncomment the initalization line to ensure the code runs. This line: `$plassoBilling = new PlassoBilling( ...`
 3. (Optional) You can access the Plasso User's `id` with: `$plassoBilling->plassoUserId`
 4. (Optional) You can access the Plasso User's `planId` with: `$plassoBilling->plassoPlanId`
+4. (Optional) You can access the Plasso User's Stripe Customer ID with: `$plassoBilling->stripeCustomerId`
 
 ## Where to place the client code
 At the **very** beginning of your script, on the pages you want to protect.
